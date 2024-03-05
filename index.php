@@ -41,12 +41,26 @@
             $framework = $_POST['framework'];
             echo "<p>Предпочитаемый фреймворк: $framework</p>";
         } else echo "<p>Фреймворк не выбран!</p>";
+
+        if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+            if (!is_dir('downloads')) {
+                mkdir('downloads');
+            }
+            if (is_writable('downloads')) {
+                $name = $_FILES['file']['name'];
+                move_uploaded_file($_FILES['file']['tmp_name'], "downloads/$name");
+                echo "Файл $name загружен";
+            }
+        } else {
+            echo 'Файл не загружен';
+        }    
+
     }
     ?>
     <div class="container">
         <div class="form">
             <h3>Анкета пользователя</h3>
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="login" class="form-label">Логин</label>
                     <input type="text" name="login" class="form-control" required minlength="3">
@@ -58,6 +72,10 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Пароль</label>
                     <input type="password" name="password" class="form-control" required minlength="3">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="">Загрузить файл (фото или резюме)</label>
+                    <input class="form-input" type="file" name="file" size="10">
                 </div>
                 <p>Сколько языков программирования вы изучили?</p>
                 <select name="numbers" class="form-select form-select-sm" aria-label="Small select example">
